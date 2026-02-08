@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import type { Goal, WorkoutLog, NutritionLog } from '../types';
 
 const AppContext = createContext<any>(null);
 

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { 
   TrendingUp, BarChart3, Award, Scale, 
-  Dumbbell, Target, Zap, ChevronRight 
+  Dumbbell, Target, Zap,  
 } from 'lucide-react';
 
 export const Progreso = () => {
