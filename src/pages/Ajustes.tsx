@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import  { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Settings, Cpu, ShieldCheck, Bell, 
   User, Database, Smartphone, LogOut,
-  Zap, ChevronRight, RefreshCw, Trash2, CheckCircle2, Lock, Activity
+  Zap, ChevronRight, CheckCircle2, Lock, 
 } from 'lucide-react';
 
 // --- CREDENCIALES ---

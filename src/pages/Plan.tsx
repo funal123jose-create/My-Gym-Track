@@ -1,8 +1,8 @@
 import { useMemo } from 'react'; // Importamos useMemo para la lógica de tiempo
 import { motion } from 'framer-motion';
 import { 
-  Dumbbell, Clock, Zap, Info, ChevronRight, 
-  Flame, Heart, Coffee, Timer, AlertCircle 
+  Dumbbell, Info, ChevronRight, 
+  Heart, Coffee, Timer,  
 } from 'lucide-react';
 
 const routines = [

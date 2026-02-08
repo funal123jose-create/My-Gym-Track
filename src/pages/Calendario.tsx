@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Calendar as CalendarIcon, ChevronLeft, ChevronRight, 
-  Dumbbell, Flame, Zap, CheckCircle2, Info 
+  Dumbbell, Zap, Info 
 } from 'lucide-react';
 
 export const Calendario = () => {
