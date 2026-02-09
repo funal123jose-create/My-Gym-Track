@@ -9,14 +9,12 @@ export const Dashboard = () => {
   const [fuel, setFuel] = useState({ glycogen: 85, atp: 70, amino: 90 });
 
   // --- LÓGICA DE PASOS CON MEMORIA ---
-  const [dailySteps, setDailySteps] = useState(8500); // Pasos de hoy
+  const [dailySteps, setDailySteps] = useState(8500);
   const [weeklySteps, setWeeklySteps] = useState(() => {
-    // Intenta leer la memoria al cargar
     const saved = localStorage.getItem('recomp_weekly_steps');
-    return saved ? parseInt(saved) : 42500; // Valor base si es la primera vez
+    return saved ? parseInt(saved) : 42500;
   });
 
-  // Cada vez que cambian los pasos semanales, los guardamos en la "memoria"
   useEffect(() => {
     localStorage.setItem('recomp_weekly_steps', weeklySteps.toString());
   }, [weeklySteps]);
@@ -78,7 +76,6 @@ export const Dashboard = () => {
       atp: Math.max(fuel.atp - 25, 10),
       amino: Math.max(fuel.amino - 12, 15)
     });
-    // Simulación: Al quemar fuel, también sumamos unos pasos al contador
     setDailySteps(prev => prev + 50);
     setWeeklySteps(prev => prev + 50);
   };
@@ -123,11 +120,10 @@ export const Dashboard = () => {
         </motion.button>
       </header>
 
-      {/* STAT CARDS */}
+      {/* STAT CARDS CON ANIMACIÓN DE ENTRADA */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard icon={<Dumbbell size={28} />} title="Modo de Hoy" value={config.tipo} progress={100} color="blue" />
         <StatCard icon={<Zap size={28} />} title="Meta Proteína" value={config.metaProteina} progress={85} color="yellow" />
-        {/* PASOS: Ahora muestra los pasos de hoy y la memoria semanal en el texto de abajo */}
         <StatCard 
           icon={<Footprints size={28} />} 
           title="Pasos Hoy" 
@@ -177,14 +173,19 @@ export const Dashboard = () => {
   );
 };
 
-// --- COMPONENTES AUXILIARES ---
+// --- COMPONENTES AUXILIARES CON ANIMACIÓN REPLICADA ---
 
 const FuelCell = ({ label, value, color, sub }: any) => (
   <div className="flex flex-col items-center gap-4 h-full">
     <div className="flex-1 w-full bg-black/40 rounded-3xl border border-white/5 relative overflow-hidden flex flex-col justify-end p-1.5">
-      <motion.div animate={{ height: `${value}%` }} transition={{ type: "tween", ease: "linear" }}
+      {/* Añadido initial={{ height: 0 }} para el efecto de llenado al cargar */}
+      <motion.div 
+        initial={{ height: 0 }}
+        animate={{ height: `${value}%` }} 
+        transition={{ duration: 1.5, ease: "circOut" }}
         style={{ backgroundColor: color, boxShadow: `0 0 30px ${color}44` }}
-        className="w-full rounded-2xl relative" />
+        className="w-full rounded-2xl relative" 
+      />
     </div>
     <div className="text-center">
       <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest italic leading-none">{label}</p>
@@ -214,7 +215,13 @@ const StatCard = ({ icon, title, value, progress, color, subText }: any) => {
         </div>
         <div className="mt-8 space-y-3">
           <div className="h-2 w-full bg-black/30 rounded-full overflow-hidden border border-white/10">
-            <motion.div animate={{ width: `${Math.min(progress, 100)}%` }} className="h-full bg-white shadow-[0_0_15px_rgba(255,255,255,0.8)]" />
+            {/* Se añadió initial={{ width: 0 }} para que la barrita blanca se llene al entrar */}
+            <motion.div 
+              initial={{ width: 0 }}
+              animate={{ width: `${Math.min(progress, 100)}%` }} 
+              transition={{ duration: 1.5, ease: "circOut" }}
+              className="h-full bg-white shadow-[0_0_15px_rgba(255,255,255,0.8)]" 
+            />
           </div>
           <div className="flex justify-between text-[10px] font-black text-white/70 uppercase italic tracking-tighter">
             <span>{subText ? subText : "Sincronizado"}</span>

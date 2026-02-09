@@ -105,11 +105,11 @@ export const Nutricion = () => {
         </h1>
       </div>
 
-      {/* MACRO CARDS */}
+      {/* MACRO CARDS CON DISEÑO DEL DASHBOARD */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <MacroCard title="CONSTRUCCIÓN" value={config.data.prote} label="PROTEÍNA" color="emerald" progress={config.data.p_ratio} icon={<Beef size={18}/>} sub="REPARACIÓN ACTIVA" />
-        <MacroCard title="ENERGÍA" value={config.data.carbs} label="CARBOHIDRATOS" color="cyan" progress={config.data.c_ratio} icon={<Zap size={18}/>} sub="SUMINISTRO GLUCÓGENO" />
-        <MacroCard title="SOPORTE" value={config.data.grasa} label="GRASAS" color="orange" progress={config.data.g_ratio} icon={<Fish size={18}/>} sub="OPTIMIZACIÓN HORMONAL" />
+        <MacroCard title="CONSTRUCCIÓN" value={config.data.prote} label="PROTEÍNA" color="emerald" progress={config.data.p_ratio} icon={<Beef size={28}/>} sub="REPARACIÓN ACTIVA" />
+        <MacroCard title="ENERGÍA" value={config.data.carbs} label="CARBOHIDRATOS" color="cyan" progress={config.data.c_ratio} icon={<Zap size={28}/>} sub="SUMINISTRO GLUCÓGENO" />
+        <MacroCard title="SOPORTE" value={config.data.orange} label="GRASAS" color="orange" progress={config.data.g_ratio} icon={<Fish size={28}/>} sub="OPTIMIZACIÓN HORMONAL" macroValue={config.data.grasa} />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 pt-6">
@@ -167,7 +167,12 @@ export const Nutricion = () => {
                     ))}
                 </div>
                 <div className="relative h-3 bg-white/5 rounded-full overflow-hidden mb-4">
-                    <motion.div initial={{ width: 0 }} animate={{ width: `${(waterCups/8)*100}%` }} className="h-full bg-gradient-to-r from-cyan-600 to-blue-400" />
+                    <motion.div 
+                      initial={{ width: 0 }} 
+                      animate={{ width: `${(waterCups/8)*100}%` }} 
+                      transition={{ duration: 1, ease: "circOut" }}
+                      className="h-full bg-gradient-to-r from-cyan-600 to-blue-400" 
+                    />
                 </div>
                 <p className={`text-[9px] font-black text-center tracking-[0.15em] uppercase italic ${getWaterStatus().color}`}>
                     {getWaterStatus().text}
@@ -177,7 +182,6 @@ export const Nutricion = () => {
         </div>
       </div>
 
-      {/* MODAL SIN EL BOTÓN "X" */}
       <AnimatePresence>
         {selectedMeal && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-6">
@@ -198,7 +202,6 @@ export const Nutricion = () => {
                 </div>
               </div>
               <div className="w-full md:w-7/12 p-8 md:p-12 flex flex-col justify-between relative">
-                {/* LA X HA SIDO ELIMINADA DE AQUÍ */}
                 <div>
                   <div className="flex justify-between items-start mb-10">
                       <div>
@@ -215,7 +218,7 @@ export const Nutricion = () => {
                               <circle cx="50" cy="50" r="42" fill="transparent" stroke="#1e293b" strokeWidth="10" />
                               <motion.circle initial={{ pathLength: 0 }} animate={{ pathLength: selectedMeal.ratios.p / 100 }} transition={{ duration: 1, ease: "easeOut" }} cx="50" cy="50" r="42" fill="transparent" stroke="#10b981" strokeWidth="10" strokeDasharray="264" transform="rotate(-90 50 50)" strokeLinecap="round" />
                               <circle cx="50" cy="50" r="42" fill="transparent" stroke="#06b6d4" strokeWidth="10" strokeDasharray={`${selectedMeal.ratios.c * 2.64} 264`} strokeDashoffset={`-${selectedMeal.ratios.p * 2.64}`} transform="rotate(-90 50 50)" strokeLinecap="round" />
-                              <circle cx="50" cy="50" r="42" fill="transparent" stroke="#f97316" strokeWidth="10" strokeDasharray={`${selectedMeal.ratios.g * 2.64} 264`} strokeDashoffset={`-${(selectedMeal.ratios.p + selectedMeal.ratios.c) * 2.64}`} transform="rotate(-90 50 50)" strokeLinecap="round" />
+                              <circle cx="50" cy="50" r="42" fill="transparent" stroke="#f97316" strokeWidth="10" strokeDasharray={`${selectedMeal.ratios.g * 2.64} 264`} strokeDashoffset={`-${((selectedMeal.ratios.p + selectedMeal.ratios.c) * 2.64)}`} transform="rotate(-90 50 50)" strokeLinecap="round" />
                               <text x="50" y="55" textAnchor="middle" fill="white" fontSize="14" className="font-black italic uppercase">Bio</text>
                           </svg>
                       </div>
@@ -260,33 +263,46 @@ export const Nutricion = () => {
   );
 };
 
-const MacroCard = ({ title, value, label, color, progress, icon, sub }: any) => {
-    const themes: any = {
-        emerald: { border: "border-emerald-500/50", glow: "bg-[radial-gradient(circle_at_center,_rgba(16,185,129,0.15)_0%,_rgba(15,23,42,0)_70%)]", text: "text-emerald-400", bar: "bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.8)]" },
-        cyan: { border: "border-cyan-500/50", glow: "bg-[radial-gradient(circle_at_center,_rgba(6,182,212,0.15)_0%,_rgba(15,23,42,0)_70%)]", text: "text-cyan-400", bar: "bg-cyan-400 shadow-[0_0_15px_rgba(6,182,212,0.8)]" },
-        orange: { border: "border-orange-500/50", glow: "bg-[radial-gradient(circle_at_center,_rgba(249,115,22,0.15)_0%,_rgba(15,23,42,0)_70%)]", text: "text-orange-400", bar: "bg-orange-500 shadow-[0_0_15px_rgba(249,115,22,0.8)]" }
+// COMPONENTE MACROCARD ACTUALIZADO CON COLORES SÓLIDOS Y ANIMACIÓN
+const MacroCard = ({ title, value, label, color, progress, icon, sub, macroValue }: any) => {
+    const schemes: any = {
+      emerald: "from-emerald-700 to-teal-900 border-emerald-400/50 shadow-emerald-500/40",
+      cyan: "from-blue-700 to-cyan-900 border-cyan-400/50 shadow-cyan-500/40",
+      orange: "from-orange-700 to-amber-900 border-orange-400/50 shadow-orange-500/40",
     };
-    const theme = themes[color];
 
     return (
-        <div className={`bg-[#0f172a] border ${theme.border} p-7 rounded-[2.5rem] relative overflow-hidden shadow-2xl`}>
-            <div className={`absolute inset-0 ${theme.glow}`} />
+        <motion.div 
+          whileHover={{ y: -8, scale: 1.02 }}
+          className={`relative rounded-[2.5rem] p-7 overflow-hidden shadow-2xl border-t-2 bg-gradient-to-br ${schemes[color]} transition-all duration-300 group`}
+        >
+            <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]" />
             <div className="relative z-10">
                 <div className="flex justify-between items-start mb-6">
                     <div>
-                        <p className="text-[8px] font-black text-slate-500 uppercase tracking-widest mb-1 italic">{title}</p>
-                        <h4 className="text-5xl font-black italic tracking-tighter leading-none mb-1 text-white">{value}</h4>
-                        <p className={`text-[10px] font-black uppercase tracking-[0.2em] ${theme.text}`}>{label}</p>
+                        <p className="text-[8px] font-black text-white/60 uppercase tracking-widest mb-1 italic">{title}</p>
+                        <h4 className="text-5xl font-black italic tracking-tighter leading-none mb-1 text-white drop-shadow-md">
+                          {macroValue ? macroValue : value}
+                        </h4>
+                        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/90">{label}</p>
                     </div>
-                    <div className={`p-4 rounded-2xl bg-white/5 ${theme.text}`}>{icon}</div>
+                    <div className="p-4 rounded-2xl bg-black/20 backdrop-blur-md border border-white/20 text-white">{icon}</div>
                 </div>
                 <div className="space-y-3">
-                    <div className="h-2 w-full bg-white/10 rounded-full overflow-hidden">
-                        <motion.div initial={{ width: 0 }} animate={{ width: `${progress}%` }} className={`h-full ${theme.bar}`} />
+                    <div className="h-2 w-full bg-black/30 rounded-full overflow-hidden border border-white/10">
+                        <motion.div 
+                          initial={{ width: 0 }} 
+                          animate={{ width: `${progress}%` }} 
+                          transition={{ duration: 1.5, ease: "circOut" }}
+                          className="h-full bg-white shadow-[0_0_15px_rgba(255,255,255,0.8)]" 
+                        />
                     </div>
-                    <p className="text-[8px] font-black text-slate-600 uppercase tracking-widest italic">{sub}</p>
+                    <div className="flex justify-between items-center">
+                      <p className="text-[8px] font-black text-white/60 uppercase tracking-widest italic">{sub}</p>
+                      <span className="text-[10px] font-black text-white italic">{progress}%</span>
+                    </div>
                 </div>
             </div>
-        </div>
+        </motion.div>
     );
 };
